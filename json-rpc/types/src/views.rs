@@ -23,6 +23,7 @@ use move_core_types::{
     language_storage::{StructTag, TypeTag},
     move_resource::MoveResource,
 };
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, convert::TryFrom};
 use transaction_builder::get_transaction_name;
@@ -31,7 +32,7 @@ pub const JSONRPC_LIBRA_CHAIN_ID: &str = "libra_chain_id";
 pub const JSONRPC_LIBRA_LEDGER_VERSION: &str = "libra_ledger_version";
 pub const JSONRPC_LIBRA_LEDGER_TIMESTAMPUSECS: &str = "libra_ledger_timestampusec";
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(JsonSchema, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct AmountView {
     pub amount: u64,
     pub currency: String,
@@ -46,7 +47,7 @@ impl AmountView {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(JsonSchema, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub enum AccountRoleView {
     #[serde(rename = "unknown")]
     Unknown,
@@ -71,7 +72,7 @@ pub enum AccountRoleView {
     },
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(JsonSchema, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct AccountView {
     pub balances: Vec<AmountView>,
     pub sequence_number: u64,
@@ -110,7 +111,7 @@ impl AccountView {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct EventView {
     pub key: BytesView,
     pub sequence_number: u64,
@@ -118,7 +119,7 @@ pub struct EventView {
     pub data: EventDataView,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type")]
 pub enum EventDataView {
     #[serde(rename = "burn")]
@@ -321,13 +322,13 @@ impl From<(u64, ContractEvent)> for EventView {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct BlockMetadata {
     pub version: u64,
     pub timestamp: u64,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(JsonSchema, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct BytesView(pub String);
 
 impl BytesView {
@@ -348,7 +349,7 @@ impl From<&Vec<u8>> for BytesView {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub enum VMStatusView {
     #[serde(rename = "executed")]
     Executed,
@@ -394,7 +395,7 @@ impl From<&KeptVMStatus> for VMStatusView {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct TransactionView {
     pub version: u64,
     pub transaction: TransactionDataView,
@@ -404,6 +405,7 @@ pub struct TransactionView {
     pub gas_used: u64,
 }
 
+#[derive(JsonSchema)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(tag = "type")]
@@ -431,7 +433,7 @@ pub enum TransactionDataView {
     UnknownTransaction {},
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(tag = "type")]
 // TODO cover all script types
 pub enum ScriptView {
@@ -594,7 +596,7 @@ impl From<TransactionPayload> for ScriptView {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct CurrencyInfoView {
     pub code: String,
     pub scaling_factor: u64,
@@ -625,7 +627,7 @@ impl From<&CurrencyInfoResource> for CurrencyInfoView {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct StateProofView {
     pub ledger_info_with_signatures: BytesView,
     pub epoch_change_proof: BytesView,
@@ -658,7 +660,7 @@ impl
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct AccountStateWithProofView {
     pub version: u64,
     pub blob: Option<BytesView>,
@@ -684,7 +686,7 @@ impl TryFrom<AccountStateWithProof> for AccountStateWithProofView {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(JsonSchema, Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct AccountStateProofView {
     pub ledger_info_to_transaction_info_proof: BytesView,
     pub transaction_info: BytesView,

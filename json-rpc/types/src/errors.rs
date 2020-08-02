@@ -6,6 +6,7 @@ use libra_types::{
     mempool_status::{MempoolStatus, MempoolStatusCode},
     vm_status::{StatusCode, StatusType},
 };
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -40,28 +41,28 @@ pub enum InvalidRequestCode {
     ParseError = -32700,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize)]
 pub enum ErrorData {
     InvalidArguments(InvalidArguments),
     StatusCode(StatusCode),
     ExceedSizeLimit(ExceedSizeLimit),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, Copy)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize, Copy)]
 pub struct InvalidArguments {
     pub required: usize,
     pub optional: usize,
     pub given: usize,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize)]
 pub struct JsonRpcError {
     pub code: i16,
     pub message: String,
     pub data: Option<ErrorData>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(JsonSchema, Clone, Debug, Deserialize, Serialize)]
 pub struct ExceedSizeLimit {
     pub limit: u16,
     pub size: usize,

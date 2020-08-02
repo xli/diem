@@ -9,6 +9,7 @@ use anyhow::Result;
 use proptest::prelude::*;
 #[cfg(any(test, feature = "fuzzing"))]
 use proptest_derive::Arbitrary;
+use schemars::JsonSchema;
 use serde::{de, ser, Deserialize, Serialize};
 use std::{convert::TryFrom, fmt};
 
@@ -452,7 +453,7 @@ macro_rules! derive_status_try_from_repr {
 derive_status_try_from_repr! {
 #[repr(u64)]
 #[allow(non_camel_case_types)]
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord, JsonSchema)]
 /// We don't derive Arbitrary on this enum because it is too large and breaks proptest. It is
 /// written for a subset of these in proptest_types. We test conversion between this and protobuf
 /// with a hand-written test.
